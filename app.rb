@@ -14,8 +14,6 @@ require 'nokogiri'
 # http://ac55f02d.ngrok.io/distance/?site_no=04231600&number=4153006890&distance=2.3
 # http://ac55f02d.ngrok.io/sites/
 
-
-
 # january 1st 2015 and 650 will not be reached until around July
 
 # http://waterdata.usgs.gov/mi/nwis/uv?cb_00055=on&cb_00010=on&format=rdb&site_no=04119400&period=&begin_date=2016-04-08&end_date=2016-04-23
