@@ -13,3 +13,5 @@ gem "redis"
 gem "thin"
 
 gem "nokogiri"
+
+gem 'sinatra-jsonp'

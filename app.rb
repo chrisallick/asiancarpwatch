@@ -2,10 +2,10 @@ require 'sinatra'
 require 'sinatra/partial'
 require 'sinatra/reloader' if development?
 
+require "sinatra/jsonp"
+
 require 'open-uri'
 require 'nokogiri'
-
-require 'geokit'
 
 # january 1st 2015 and 650 will not be reached until around July
 
@@ -153,16 +153,6 @@ not_found do
     return { :result => "error", :msg => "url not found" }.to_json
 end
 
-get '/check/accounts/' do
-    sid = client.account.messages.create(
-        :from => "+13234982368",
-        :to => "#{person}",
-        :body => conversation["text"]
-    )
-
-    return ""
-end
-
 # 43°08'30.2"
 # 77°36'58.7"
 # 43.14172222222222, 77.61630555555556
@@ -194,7 +184,9 @@ get '/latlong/' do
 
         lon = lon[0].to_f + (lon[1].to_f/60) + (lon[2].to_f/3600)
 
-        { :result => "success", :lat => lat, :lon => -lon }.to_json
+        data = { :result => "success", :lat => lat, :lon => -lon }.to_json
+
+        JSONP data
     else
         { :result => "error" }.to_json
     end
@@ -202,8 +194,16 @@ end
 
 post '/distance/' do
     content_type :json
-   
-    { :result => "error" }.to_json 
+
+    if params[:site_no] and params[:distance] and params[:number]
+        sid = client.account.messages.create(
+            :from => "+13234982368",
+            :to => "#{params[:number]}",
+            :body => "You are now registered for notifications."
+        )
+    else
+        { :result => "error" }.to_json
+    end
 end
 
 
