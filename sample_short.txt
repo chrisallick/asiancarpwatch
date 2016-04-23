@@ -1,0 +1,32 @@
+# ---------------------------------- WARNING ----------------------------------------
+# The data you have obtained from this automated U.S. Geological Survey database
+# have not received Director's approval and as such are provisional and subject to
+# revision.  The data are released on the condition that neither the USGS nor the
+# United States Government may be held liable for any damages resulting from its use.
+# Additional info: http://help.waterdata.usgs.gov/policies/provisional-data-statement
+#
+# File-format description:  http://help.waterdata.usgs.gov/faq/about-tab-delimited-output
+# Automated-retrieval info: http://help.waterdata.usgs.gov/faq/automated-retrievals
+#
+# Contact:   gs-w_support_nwisweb@usgs.gov
+# retrieved: 2016-04-23 09:20:16 EDT       (sdww02)
+#
+# Data for the following 1 site(s) are contained in this file
+#    USGS 04119400 GRAND RIVER NEAR EASTMANVILLE, MI
+# -----------------------------------------------------------------------------------
+#
+# Data provided for site 04119400
+#    DD parameter   Description
+#    04   00055     Stream velocity, feet per second
+#    06   00010     Temperature, water, degrees Celsius
+#
+# Data-value qualification codes included in this output: 
+#     P  Provisional data subject to revision.  
+# 
+agency_cd	site_no	datetime	tz_cd	04_00055	04_00055_cd	06_00010	06_00010_cd
+5s	15s	20d	6s	14n	10s	14n	10s
+USGS	04119400	2016-04-08 00:00	EST	1.68	P	5.7	P
+USGS	04119400	2016-04-08 00:12	EST	1.66	P	5.8	P
+USGS	04119400	2016-04-08 00:24	EST	1.64	P	5.9	P
+USGS	04119400	2016-04-08 00:36	EST	1.66	P	5.8	P
+USGS	04119400	2016-04-08 00:48	EST	1.65	P	5.8	P
