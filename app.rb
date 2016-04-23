@@ -4,8 +4,17 @@ require 'sinatra/reloader' if development?
 
 require "sinatra/jsonp"
 
+require './config.rb'
+
 require 'open-uri'
 require 'nokogiri'
+
+# http://ac55f02d.ngrok.io/parse/
+# http://ac55f02d.ngrok.io/latlong/?site_no=04231600
+# http://ac55f02d.ngrok.io/distance/?site_no=04231600&number=4153006890&distance=2.3
+# http://ac55f02d.ngrok.io/sites/
+
+
 
 # january 1st 2015 and 650 will not be reached until around July
 
@@ -38,11 +47,7 @@ require 'nokogiri'
 #    64   00010     Temperature, water, degrees Celsius, [YSI UP]
 #    69   00010     Temperature, water, degrees Celsius, YSI DOWN
 
-
-account_sid = "AC3fd82687f1494464dfabcbb450aa05aa"
-auth_token = "2e2353776aaf3fed6106c66e062cfa5e"
-
-client = Twilio::REST::Client.new account_sid, auth_token
+client = Twilio::REST::Client.new Config.getSID(), Config.getToken()
 
 configure do
     redisUri = ENV["REDISTOGO_URL"] || 'redis://localhost:6379'
@@ -184,6 +189,15 @@ get '/latlong/' do
 
         lon = lon[0].to_f + (lon[1].to_f/60) + (lon[2].to_f/3600)
 
+        new_object = {
+            :site_no => params[:site_no],
+            :lat => lat,
+            :lon => lon
+        }
+
+        $redis.lpush("usgs_sites", params[:site_no])
+        $redis.set("usgs_site:#{params[:site_no]}", new_object.to_json )
+
         data = { :result => "success", :lat => lat, :lon => -lon }.to_json
 
         JSONP data
@@ -192,7 +206,7 @@ get '/latlong/' do
     end
 end
 
-post '/distance/' do
+get '/distance/' do
     content_type :json
 
     if params[:site_no] and params[:distance] and params[:number]
@@ -201,10 +215,35 @@ post '/distance/' do
             :to => "#{params[:number]}",
             :body => "You are now registered for notifications."
         )
+
+        site_object = JSON.parse( $redis.get("usgs_site:#{params[:site_no]}") )
+        site_object["number"] = params[:number]
+        site_object["distance"] = params[:distance]
+        
+        $redis.set("usgs_site:#{params[:site_no]}", site_object.to_json )
+
+        data = { :result => "success" }.to_json
+
+        JSONP data
     else
         { :result => "error" }.to_json
     end
 end
+
+get '/sites/' do
+    content_type :json
+
+    sites = []
+    all_sites = $redis.lrange("usgs_sites", 0, $redis.llen("usgs_sites"))
+    all_sites.each do |site|
+        site_object = JSON.parse( $redis.get("usgs_site:#{site}") )
+        sites.push( site_object )
+    end
+
+    data = { :result => "success", :data => sites }.to_json
+    JSONP data
+end
+
 
 
 
